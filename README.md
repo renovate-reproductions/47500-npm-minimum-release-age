@@ -15,13 +15,15 @@ LFM is normally one branch for all package files, so `additionalBranchPrefix: "{
 | --- | --- | --- | --- | --- |
 | `before/` | `before=2024-06-01` | none | yes (`before`) | `semver` 7.5.0 is only proposed up to 7.6.2 (newest release before the date); LFM branch and PR are created right away |
 | `min-release-age/` | `min-release-age=7` | `packageManager: npm@11.10.0` | yes (npm >= 11.10.0 is guaranteed) | LFM branch and PR are created right away |
-| `no-constraint/` | `min-release-age=7` | none | no (`--before` is not passed next to `min-release-age`, and npm >= 11.10.0 is not guaranteed) | LFM is held back by the stability wait, pending on the Dependency Dashboard |
-| `yarn/` | `min-release-age=7` (ignored) | `packageManager: yarn@1.22.22` | no | LFM is held back by the stability wait, pending on the Dependency Dashboard |
+| `no-constraint/` | `min-release-age=7` | none | no (`--before` is not passed next to `min-release-age`, and npm >= 11.10.0 is not guaranteed) | LFM branch and PR are created, but the `renovate/stability-days` status stays `pending` |
+| `yarn/` | `min-release-age=7` (ignored) | `packageManager: yarn@1.22.22` | no | LFM branch and PR are created, but the `renovate/stability-days` status stays `pending` |
+
+Only `semver` in `before/` gets a regular update PR, to keep the noise down.
 
 ## Expected behaviour
 
-- On `main`: LFM always waits for the release timestamps, and the `.npmrc` ages are ignored when looking up updates.
-- On the PR branch: the LFM branches for `before/` and `min-release-age/` are created immediately (debug log: "the package manager enforces the minimum release age"), `no-constraint/` and `yarn/` wait.
+- On `main`: the LFM stability wait always applies (`renovate/stability-days` is `pending`), and the `.npmrc` ages are ignored when looking up updates.
+- On the PR branch: the `renovate/stability-days` status of the LFM branches for `before/` and `min-release-age/` is `success` right away (debug log: "the package manager enforces the minimum release age"), `no-constraint/` and `yarn/` stay `pending`.
 
 ## Verify
 
