@@ -9,6 +9,7 @@
   "minimumReleaseAge": "3 days",
   "minimumReleaseAgeBehaviour": "timestamp-required",
   "internalChecksFilter": "strict",
+  "recreateWhen": "always",
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": [
