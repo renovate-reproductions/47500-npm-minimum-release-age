@@ -8,6 +8,7 @@
   ],
   "minimumReleaseAge": "3 days",
   "minimumReleaseAgeBehaviour": "timestamp-required",
+  "internalChecksFilter": "strict",
   "lockFileMaintenance": {
     "enabled": true,
     "schedule": [
@@ -16,10 +17,31 @@
   },
   "packageRules": [
     {
+      "description": "One lock file maintenance branch per directory",
       "matchUpdateTypes": [
         "lockFileMaintenance"
       ],
       "additionalBranchPrefix": "{{packageFileDir}}-"
+    },
+    {
+      "description": "Only semver in before/ is of interest, reduce noise",
+      "matchUpdateTypes": [
+        "major",
+        "minor",
+        "patch",
+        "pin",
+        "digest"
+      ],
+      "matchPackageNames": [
+        "!semver"
+      ],
+      "enabled": false
+    },
+    {
+      "matchDepTypes": [
+        "packageManager"
+      ],
+      "enabled": false
     }
   ],
   "prHourlyLimit": 0,
