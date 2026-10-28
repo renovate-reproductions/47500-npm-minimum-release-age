@@ -1,0 +1,9 @@
+{
+  "name": "before",
+  "version": "1.0.0",
+  "private": true,
+  "dependencies": {
+    "express": "4.18.2",
+    "semver": "7.5.0"
+  }
+}

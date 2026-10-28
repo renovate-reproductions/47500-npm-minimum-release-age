@@ -1,0 +1,9 @@
+{
+  "name": "min-release-age",
+  "version": "1.0.0",
+  "private": true,
+  "packageManager": "npm@11.10.0",
+  "dependencies": {
+    "express": "4.18.2"
+  }
+}
