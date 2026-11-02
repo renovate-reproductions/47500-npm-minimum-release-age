@@ -1,0 +1,2 @@
+[registries.crates-io]
+min-publish-age = "2 days"
