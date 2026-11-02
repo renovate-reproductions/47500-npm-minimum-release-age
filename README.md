@@ -15,7 +15,7 @@ Pull requests of renovatebot/renovate (all drafts, bottom to top, GitHub Stack 4
 ## Config
 
 - npm and cargo get `minimumReleaseAge: 7 days` at manager level. This is the repository value.
-- Poetry gets no `minimumReleaseAge`. It relies on `security:minimumReleaseAgePyPI` (3 days in `packageRules` and `poetry.minimumReleaseAgePackageManager: 3 days`).
+- Poetry gets no `minimumReleaseAge`. It relies on `security:minimumReleaseAgePypi` (3 days in `packageRules` and `poetry.minimumReleaseAgePackageManager: 3 days`).
 - Every directory is a separate project with a committed lock file that is older than today, so LFM has updates to make. LFM creates one branch per directory (`additionalBranchPrefix: "{{packageFileDir}}-"`).
 - Renovate reads only the `.cargo/config.toml` in the repository root. Each cargo config variant is therefore its own base branch (`cargo-global-age`, `cargo-allow`, `cargo-registry-age`) that adds only that file to `main`.
 - Only the packages of the cases get update PRs (`semver`, `@types/node`, `express`, `requests`, `boto3`, `serde`, `cc`).
@@ -40,7 +40,7 @@ pnpm 11.28.8.
 | Directory           | Setup                                                                 | PR     | Expected                                                                                                                                                                                                                                                                                                                |
 | ------------------- | --------------------------------------------------------------------- | ------ | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `pnpm/default`      | no pnpm age, `packageManager: pnpm@11.28.8`                           | #47542 | Renovate uses pnpm's v11 default of 1 day for npm packages (extracted package rule), so `@types/node` with `minimumReleaseAge: null` still waits 1 day. Branches pass `--config.minimum-release-age=10080` and `--config.minimum-release-age-exclude=<name>@<version>` for each updated package (a single entry twice). |
-| `pnpm/workspace`    | `minimumReleaseAge: 14400`, `minimumReleaseAgeExclude: [@types/node]` | #47542 | Lookup waits 10 days except for `@types/node` (7 days). The flag is `--config.minimum-release-age=14400`; the exclude flags repeat `@types/node` first. LFM passes right away.                                                                                                                                          |
+| `pnpm/workspace`    | `minimumReleaseAge: 14400`, `minimumReleaseAgeExclude: [@types/node]` | #47542 | Lookup waits 10 days except for `@types/node` (7 days). The flag is `--config.minimum-release-age=14400`; on the `semver` branch the exclude flags repeat `@types/node` first. The `@types/node` branch gets no exclude flag, as the workspace already excludes it. LFM passes right away.                                                                                                                                          |
 | `pnpm/strict-false` | as above plus `minimumReleaseAgeStrict: false`                        | #47542 | LFM stays pending.                                                                                                                                                                                                                                                                                                      |
 
 ## Poetry
@@ -71,10 +71,13 @@ Set `RENOVATE_X_CARGO_MIN_PUBLISH_AGE=true` for the LFM cases.
 Check out the top branch `feat/cargo-minimum-release-age-extracted` of renovatebot/renovate (or the PR branch of interest) and run `pnpm install`. Poetry 2.4 or newer, pnpm 11.28.8 and cargo must be on `PATH`. Then run:
 
 ```sh
-LOG_LEVEL=debug RENOVATE_TOKEN=<token> RENOVATE_X_CARGO_MIN_PUBLISH_AGE=true \
+LOG_LEVEL=trace RENOVATE_TOKEN=<token> RENOVATE_X_CARGO_MIN_PUBLISH_AGE=true \
   node lib/renovate.ts --binary-source=global --dry-run=full \
   renovate-reproductions/47500-npm-minimum-release-age
 ```
+
+`LOG_LEVEL=trace` is needed for the env values: the debug log names the variables of a command, but only the trace log ("Command options") shows their values.
+A dry-run renders no PR body, so the PR notices of the exemption rows are only visible in a real run (the cargo notice also appears in the `artifactNotices` of the debug log).
 
 Search the log for:
 

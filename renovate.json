@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:recommended", "security:minimumReleaseAgePyPI"],
+  "extends": ["config:recommended", "security:minimumReleaseAgePypi"],
   "enabledManagers": ["npm", "poetry", "cargo"],
   "baseBranchPatterns": [
     "main",
