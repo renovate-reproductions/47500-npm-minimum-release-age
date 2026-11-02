@@ -1,47 +1,80 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": [
-    "config:recommended"
+  "extends": ["config:recommended", "security:minimumReleaseAgePyPI"],
+  "enabledManagers": ["npm", "poetry", "cargo"],
+  "baseBranchPatterns": [
+    "main",
+    "cargo-global-age",
+    "cargo-allow",
+    "cargo-registry-age"
   ],
-  "enabledManagers": [
-    "npm"
-  ],
-  "minimumReleaseAge": "3 days",
+  "npm": { "minimumReleaseAge": "7 days" },
+  "cargo": { "minimumReleaseAge": "7 days" },
   "minimumReleaseAgeBehaviour": "timestamp-required",
   "internalChecksFilter": "strict",
   "recreateWhen": "always",
-  "lockFileMaintenance": {
-    "enabled": true,
-    "schedule": [
-      "at any time"
-    ]
-  },
+  "lockFileMaintenance": { "enabled": true, "schedule": ["at any time"] },
   "packageRules": [
     {
       "description": "One lock file maintenance branch per directory",
-      "matchUpdateTypes": [
-        "lockFileMaintenance"
-      ],
+      "matchUpdateTypes": ["lockFileMaintenance"],
       "additionalBranchPrefix": "{{packageFileDir}}-"
     },
     {
-      "description": "Only semver in before/ is of interest, reduce noise",
-      "matchUpdateTypes": [
-        "major",
-        "minor",
-        "patch",
-        "pin",
-        "digest"
-      ],
+      "description": "Only the packages of the cases get update PRs",
+      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"],
       "matchPackageNames": [
-        "!semver"
+        "!semver",
+        "!@types/node",
+        "!express",
+        "!requests",
+        "!boto3",
+        "!serde",
+        "!cc"
       ],
       "enabled": false
     },
     {
-      "matchDepTypes": [
-        "packageManager"
+      "description": "express only in npm/repository-age",
+      "matchPackageNames": ["express"],
+      "matchFileNames": ["!npm/repository-age/**"],
+      "matchUpdateTypes": ["major", "minor", "patch", "pin", "digest"],
+      "enabled": false
+    },
+    {
+      "description": "A larger age for major updates only decides when Renovate raises them (#47570)",
+      "matchFileNames": ["npm/repository-age/**"],
+      "matchUpdateTypes": ["major"],
+      "minimumReleaseAge": "30 days"
+    },
+    {
+      "description": "Exemptions: a smaller own minimumReleaseAge wins for the branch",
+      "matchFileNames": [
+        "npm/exemption/**",
+        "poetry/exemption/**",
+        "cargo/exemption/**"
       ],
+      "matchPackageNames": ["@types/node", "boto3", "cc"],
+      "minimumReleaseAge": null
+    },
+    {
+      "description": "pnpm/default: the pnpm v11 default of 1 day still applies without Renovate's age",
+      "matchFileNames": ["pnpm/default/**"],
+      "matchPackageNames": ["@types/node"],
+      "minimumReleaseAge": null
+    },
+    {
+      "matchDepTypes": ["packageManager"],
+      "enabled": false
+    },
+    {
+      "description": "The cargo-* base branches only exist for the cargo cases",
+      "matchBaseBranches": [
+        "cargo-global-age",
+        "cargo-allow",
+        "cargo-registry-age"
+      ],
+      "matchManagers": ["npm", "poetry"],
       "enabled": false
     }
   ],
