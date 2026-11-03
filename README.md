@@ -52,7 +52,7 @@ Poetry 2.4 or newer (locked with 2.5.1).
 | -------------------- | ------------------------------------------------------------ | -------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `poetry/no-config`   | no `poetry.toml`                                             | #47677, #47678 | `POETRY_SOLVER_MIN_RELEASE_AGE=3` from the preset's `minimumReleaseAgePackageManager` (#47678). With only #47677 no variable is set, as the 3 days are only in `packageRules` (main: 3, from the update's own value). |
 | `poetry/poetry-toml` | `min-release-age = 5`, `min-release-age-exclude = ["boto3"]` | #47677         | Lookup waits 5 days for `requests` and 3 days for `boto3`. No variable is set, as max(3, 5) equals Poetry's own value.                                                                                                |
-| `poetry/exemption`   | `boto3` with `minimumReleaseAge: null`                       | #47677         | If the newest `boto3` is younger than 3 days: no variable for that branch, plus a PR notice.                                                                                                                          |
+| `poetry/exemption`   | `boto3` with `minimumReleaseAge: null`                       | #47677, #47678 | `boto3` pins one version. If its newest release is younger than 3 days: `POETRY_SOLVER_MIN_RELEASE_AGE=3` and `POETRY_SOLVER_MIN_RELEASE_AGE_EXCLUDE=boto3` for that branch. With only #47677 nothing is set.         |
 
 ## cargo
 
