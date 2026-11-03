@@ -8,6 +8,7 @@
     "cargo-allow",
     "cargo-registry-age"
   ],
+  "minimumReleaseAgePackageManagerSync": true,
   "npm": { "minimumReleaseAge": "7 days" },
   "cargo": { "minimumReleaseAge": "7 days" },
   "minimumReleaseAgeBehaviour": "timestamp-required",

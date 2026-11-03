@@ -14,6 +14,7 @@ Pull requests of renovatebot/renovate (all drafts, bottom to top, GitHub Stack 4
 
 ## Config
 
+- `minimumReleaseAgePackageManagerSync: true` turns on the experimental integration (#47570). Without it, Renovate behaves as on `main` for every case below.
 - npm and cargo get `minimumReleaseAge: 7 days` at manager level. This is the repository value.
 - Poetry gets no `minimumReleaseAge`. It relies on `security:minimumReleaseAgePypi` (3 days in `packageRules` and `poetry.minimumReleaseAgePackageManager: 3 days`).
 - Every directory is a separate project with a committed lock file that is older than today, so LFM has updates to make. LFM creates one branch per directory (`additionalBranchPrefix: "{{packageFileDir}}-"`).
